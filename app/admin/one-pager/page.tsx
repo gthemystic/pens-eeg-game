@@ -11,7 +11,6 @@ import { QRCodeSVG } from 'qrcode.react'
 import { PensLogo } from '@/components/pens-logo'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Printer, CheckCircle2, Globe, Laptop, Smartphone } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 function siteUrlForQr(): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim()
@@ -138,7 +137,10 @@ export default function AdminOnePagerPage() {
                   Art: "The Electrical River" (EEG Waveform)
                 </p>
               </div>
-            </section> section */}
+            </section>
+          </div>
+
+          {/* Right Column: Steps & URLs */}
           <div className="md:col-span-3 space-y-8 print:space-y-6">
             <section className="bg-[#1a2a3a] rounded-3xl p-8 shadow-2xl text-white print:bg-white print:text-black print:border-2 print:border-gray-100 print:shadow-none">
               <div className="flex items-center gap-2 mb-8 print:mb-6">
