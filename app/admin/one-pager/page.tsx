@@ -2,6 +2,7 @@
 
 /**
  * 📄 Host one-pager — print-me cheat sheet + join QR (no cape required). 🖨️
+ * Now with enhanced Ghibli-inspired visuals and EEG-themed artistry. 🎨🧠
  */
 
 import { useEffect, useMemo, useState } from 'react'
@@ -9,6 +10,8 @@ import Link from 'next/link'
 import { QRCodeSVG } from 'qrcode.react'
 import { PensLogo } from '@/components/pens-logo'
 import { Button } from '@/components/ui/button'
+import { ArrowLeft, Printer, CheckCircle2, Globe, Laptop, Smartphone } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 function siteUrlForQr(): string {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim()
@@ -27,99 +30,178 @@ export default function AdminOnePagerPage() {
   const qrValue = useMemo(() => (origin ? `${origin}/` : ''), [origin])
 
   return (
-    <div className="min-h-screen bg-background text-foreground print:bg-white print:text-black">
-      <div className="max-w-3xl mx-auto px-6 py-8 print:py-6 print:px-8 space-y-8 print:space-y-5">
-        <div className="flex flex-wrap items-start justify-between gap-4 print:hidden">
-          <Link href="/admin" className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
-            ← Back to host console
+    <div className="min-h-screen bg-[#fdfcf0] text-[#2d2d2d] font-sans selection:bg-primary/20">
+      {/* Visual Header - Ghibli Style */}
+      <div className="relative h-48 md:h-64 w-full overflow-hidden print:h-40">
+        <img 
+          src="/assets/host-one-pager-header.png" 
+          alt="Ghibli-style Neurology Lab" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#fdfcf0] to-transparent opacity-60" />
+        
+        {/* Navigation - Hidden on Print */}
+        <div className="absolute top-6 left-6 z-10 print:hidden">
+          <Link 
+            href="/admin" 
+            className="group flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md rounded-full text-sm font-bold shadow-sm hover:shadow-md hover:bg-white transition-all border border-black/5"
+          >
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Console
           </Link>
-          <Button type="button" variant="outline" size="sm" onClick={() => window.print()}>
-            Print / Save PDF
+        </div>
+        
+        <div className="absolute top-6 right-6 z-10 print:hidden">
+          <Button 
+            type="button" 
+            onClick={() => window.print()}
+            className="rounded-full font-black shadow-lg hover:scale-105 transition-transform bg-[#4a6fa5] text-white hover:bg-[#3d5a8a]"
+          >
+            <Printer className="w-4 h-4 mr-2" />
+            Print Guide
           </Button>
         </div>
+      </div>
 
-        <header className="border-b border-border/60 print:border-black/20 pb-6 print:pb-4">
-          <div className="flex items-center gap-3 mb-3">
-            <PensLogo size="sm" />
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground print:text-black/70">
-              Host quick sheet
-            </p>
+      <div className="max-w-4xl mx-auto px-6 pb-16 -mt-12 relative z-20 print:mt-0 print:pb-8">
+        {/* Title Card */}
+        <header className="bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-black/5 print:shadow-none print:border-none print:p-0">
+          <div className="flex items-center gap-4 mb-6 print:mb-4">
+            <div className="bg-[#f0f4f8] p-3 rounded-2xl">
+              <PensLogo size="sm" />
+            </div>
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-[#4a6fa5]/70">
+                Official Host Guide
+              </p>
+              <h1 className="text-3xl md:text-5xl font-black tracking-tight text-[#1a2a3a]">
+                PENS EEG Quiz Night
+              </h1>
+            </div>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black leading-tight">
-            PENS EEG — live quiz night
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground print:text-black/80 max-w-2xl leading-relaxed">
-            One page for the person running the room: where players go, how the flow works, and the
-            password reminder. The QR sends phones to the main join page for this deployment.
+          
+          <p className="text-lg text-[#4a5568] leading-relaxed max-w-2xl print:text-base print:max-w-full">
+            The ultimate cheat sheet for running a successful live room. 
+            Everything you need to lead your participants through the wonders of brainwave interpretation.
           </p>
         </header>
 
-        <section className="grid md:grid-cols-2 gap-8 print:grid-cols-2 print:gap-6 items-start">
-          <div className="space-y-4">
-            <h2 className="text-lg font-black uppercase tracking-wide">Scan to join (players)</h2>
-            <p className="text-sm text-muted-foreground print:text-black/75">
-              Participants open this URL, enter the room code you announce, pick a hero avatar,
-              then answer on their phones while the projector shows questions.
-            </p>
-            <div className="rounded-2xl border-2 border-border/80 bg-card p-6 flex flex-col items-center gap-3 print:border-black/30">
-              {qrValue ? (
-                <QRCodeSVG
-                  value={qrValue}
-                  size={200}
-                  level="M"
-                  includeMargin
-                  className="print:contrast-125"
-                />
-              ) : (
-                <p className="text-sm text-muted-foreground">Loading QR…</p>
-              )}
-              <p className="font-mono text-sm font-bold break-all text-center">{qrValue || '—'}</p>
-            </div>
-            <p className="text-xs text-muted-foreground print:text-black/60">
-              Tip: set <span className="font-mono">NEXT_PUBLIC_SITE_URL</span> in production so the
-              QR always encodes your canonical domain, even if you open this page from a preview URL.
-            </p>
-          </div>
+        <div className="grid md:grid-cols-5 gap-8 mt-10 print:grid-cols-5 print:gap-6">
+          
+          {/* Left Column: QR & URL */}
+          <div className="md:col-span-2 space-y-8 print:space-y-6">
+            <section className="bg-white rounded-3xl p-8 shadow-lg border border-black/5 print:shadow-none print:border-2 print:border-gray-100">
+              <div className="flex items-center gap-2 mb-6">
+                <Smartphone className="w-5 h-5 text-[#4a6fa5]" />
+                <h2 className="text-xl font-black tracking-tight">Participant Join</h2>
+              </div>
+              
+              <div className="bg-[#f8fafc] rounded-2xl p-6 flex flex-col items-center gap-4 border border-[#e2e8f0]">
+                {qrValue ? (
+                  <div className="bg-white p-4 rounded-xl shadow-inner">
+                    <QRCodeSVG
+                      value={qrValue}
+                      size={180}
+                      level="H"
+                      includeMargin={false}
+                      className="print:contrast-125"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-[180px] h-[180px] bg-gray-100 animate-pulse rounded-xl" />
+                )}
+                
+                <div className="text-center space-y-1 w-full">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Scan to enter</p>
+                  <p className="font-mono text-sm font-bold break-all bg-white py-2 px-3 rounded-lg border border-gray-100 shadow-sm">
+                    {origin || 'pens-quiz.com'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="mt-6 flex items-start gap-3 bg-[#fff9db] p-4 rounded-xl border border-[#ffe066]/30">
+                <CheckCircle2 className="w-5 h-5 text-[#f59f00] shrink-0 mt-0.5" />
+                <p className="text-xs font-medium leading-relaxed text-[#856404]">
+                  <strong>Tip:</strong> Players can enter the code you announce or simply scan this QR to reach the lobby instantly.
+                </p>
+              </div>
+            </section>
 
-          <div className="space-y-4">
-            <h2 className="text-lg font-black uppercase tracking-wide">Host checklist</h2>
-            <ol className="list-decimal pl-5 space-y-2 text-sm leading-relaxed print:text-black/90">
-              <li>
-                Open <span className="font-semibold">/admin</span>, unlock with the host password (
-                <span className="font-mono">PENS_ADMIN_PASSWORD</span> — default in dev:{' '}
-                <span className="font-mono">pens-dev</span>).
-              </li>
-              <li>Choose the quiz and tap <span className="font-semibold">Create new room</span>.</li>
-              <li>
-                On the big screen, open <span className="font-mono">/display?code=ROOM</span>{' '}
-                (use the link in the console).
-              </li>
-              <li>Share the 6-character room code (or let players scan the QR and type the code).</li>
-              <li>
-                When everyone is in the lobby, tap <span className="font-semibold">Start quiz</span>.
-              </li>
-              <li>
-                After each question, tap <span className="font-semibold">Reveal results</span>, then{' '}
-                <span className="font-semibold">Next question</span> when you are ready.
-              </li>
-              <li>At the end, use <span className="font-semibold">Show final leaderboard</span>.</li>
-            </ol>
-            <div className="rounded-xl bg-secondary/60 print:bg-neutral-100 p-4 text-sm space-y-1">
-              <p className="font-black">URLs (replace ROOM)</p>
-              <p className="font-mono break-all text-xs opacity-90">
-                {origin || '(your site)'}/?code=ROOM — players
-              </p>
-              <p className="font-mono break-all text-xs opacity-90">
-                {origin || '(your site)'}/display?code=ROOM — projector
-              </p>
-              <p className="font-mono break-all text-xs opacity-90">{origin || '(your site)'}/admin — host</p>
-            </div>
-          </div>
-        </section>
+            <section className="hidden md:block print:block overflow-hidden rounded-3xl bg-white shadow-lg border border-black/5 print:shadow-none">
+              <img 
+                src="/assets/eeg-magical-landscape.png" 
+                alt="EEG Landscape" 
+                className="w-full h-40 object-cover"
+              />
+              <div className="p-6">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic">
+                  Art: "The Electrical River" (EEG Waveform)
+                </p>
+              </div>
+            </section> section */}
+          <div className="md:col-span-3 space-y-8 print:space-y-6">
+            <section className="bg-[#1a2a3a] rounded-3xl p-8 shadow-2xl text-white print:bg-white print:text-black print:border-2 print:border-gray-100 print:shadow-none">
+              <div className="flex items-center gap-2 mb-8 print:mb-6">
+                <div className="bg-[#4a6fa5] p-2 rounded-lg print:bg-gray-100">
+                  <Laptop className="w-5 h-5 text-white print:text-black" />
+                </div>
+                <h2 className="text-2xl font-black tracking-tight">Host Checklist</h2>
+              </div>
+              
+              <div className="space-y-6">
+                {[
+                  { step: "01", title: "Access Console", desc: "Open /admin and enter your host secret key." },
+                  { step: "02", title: "Create Room", desc: "Select your desired EEG quiz and launch a fresh session." },
+                  { step: "03", title: "Display Board", desc: "Open the Projector Link on the main screen for all to see." },
+                  { step: "04", title: "Assemble Players", desc: "Announce the 6-character room code as players scan in." },
+                  { step: "05", title: "Begin Journey", desc: "Once everyone has a hero avatar, tap Start Quiz." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-5 group">
+                    <div className="text-3xl font-black text-[#4a6fa5]/40 group-hover:text-[#4a6fa5] transition-colors print:text-gray-300">
+                      {item.step}
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="font-bold text-lg leading-none print:text-base">{item.title}</h3>
+                      <p className="text-sm text-gray-400 leading-relaxed print:text-gray-600">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
 
-        <footer className="text-xs text-muted-foreground print:text-black/55 border-t border-border/40 print:border-black/15 pt-4 print:pt-3">
-          Firestore live rooms: set <span className="font-mono">NEXT_PUBLIC_LIVE_TRANSPORT=firestore</span>{' '}
-          and Firebase env vars on the server (see <span className="font-mono">.env.example</span>).
+            <section className="bg-white rounded-3xl p-8 shadow-lg border border-black/5 print:shadow-none print:border-2 print:border-gray-100">
+              <div className="flex items-center gap-2 mb-6">
+                <Globe className="w-5 h-5 text-[#4a6fa5]" />
+                <h2 className="text-xl font-black tracking-tight">Deployment URLs</h2>
+              </div>
+              
+              <div className="grid gap-3">
+                {[
+                  { label: "Participant Link", url: `${origin}/?code=ROOM` },
+                  { label: "Projector View", url: `${origin}/display?code=ROOM` },
+                  { label: "Host Controls", url: `${origin}/admin` }
+                ].map((link, i) => (
+                  <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-[#f8fafc] rounded-xl border border-[#e2e8f0]">
+                    <span className="text-xs font-black uppercase text-gray-400 mb-1 sm:mb-0">{link.label}</span>
+                    <span className="font-mono text-xs font-bold text-[#4a6fa5] truncate max-w-[240px]">
+                      {link.url}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <footer className="mt-12 text-center space-y-4 print:mt-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#f0f4f8] rounded-full text-[10px] font-bold uppercase tracking-widest text-[#4a6fa5]/60 border border-[#e2e8f0]">
+            Created for PENS Pediatric Epilepsy & Neurology Specialists
+          </div>
+          <p className="text-[#a0aec0] text-xs max-w-lg mx-auto leading-relaxed">
+            Proprietary EEG Quiz System. All brainwave patterns and diagnostic sequences are for educational purposes.
+          </p>
         </footer>
       </div>
     </div>
