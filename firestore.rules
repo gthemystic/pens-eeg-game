@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /pens_live_public/{room} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /pens_live_host/{room} {
+      allow read, write: if false;
+    }
+  }
+}
