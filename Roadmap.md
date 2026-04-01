@@ -2,7 +2,6 @@
 
 ## Short-term
 - Add sound effects for the host and player screens (countdown, answer locked, correct/incorrect).
-- Add confetti / fireworks effects for the final leaderboard.
 - Add a dynamically generated QR code on the projector screen for instant joining.
 
 ## Mid-term

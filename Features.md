@@ -9,3 +9,5 @@
 - **Projector Board**: Answer distribution bar charts, current question prompts, and a top 3 podium.
 - **Admin Auto-Resume**: The admin portal remembers the latest room you hosted and automatically reconnects if you refresh or switch tabs.
 - **Polished Answer UI**: Unselected choices automatically gray out to keep the user focused on their locked-in answer.
+- **Dramatic Podium Reveal**: Sequential entrance for 3rd, 2nd, and 1st place with calibrated confetti bursts and victory themes.
+- **Ending Playground**: Dedicated test route for previewing high-energy victory animations.
